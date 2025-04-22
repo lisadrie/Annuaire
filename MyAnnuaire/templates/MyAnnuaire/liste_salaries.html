@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ titre|default:"Liste des Salariés" }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'MyAnnuaire/css/style.css' %}">
+</head>
+<body>
+    <h1>{{ titre|default:"Liste des Salariés" }}</h1>
+    <ul>
+        {% for salarie in salaries %}
+            <li><a href="{% url 'detail_salarie' salarie.id %}">{{ salarie.prenom }} {{ salarie.nom }}</a></li>
+        {% empty %}
+            <li>Aucun salarié trouvé.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'recherche_par_nom' %}">Rechercher par nom</a></p>
+    <p>Rechercher par site :
+        {% for site in sites %}
+            <a href="{% url 'salaries_par_site' site.ville %}">{{ site.ville }}</a>
+        {% endfor %}
+    </p>
+    <p>Rechercher par service :
+        {% for service in services %}
+            <a href="{% url 'salaries_par_service' service.nom %}">{{ service.nom }}</a>
+        {% endfor %}
+    </p>
+</body>
+</html>

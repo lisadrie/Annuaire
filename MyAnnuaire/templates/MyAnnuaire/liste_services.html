@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Services</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'MyAnnuaire/css/style.css' %}">
+</head>
+<body>
+    <h1>Liste des Services</h1>
+    <ul>
+        {% for service in services %}
+            {% url 'salaries_par_service' service.nom|urlencode as service_url %}
+            <li><a href="{{ service_url }}">{{ service.nom }}</a></li>
+        {% empty %}
+            <li>Aucun service trouvé.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'liste_salaries' %}">Retour à la liste des salariés</a></p>
+</body>
+</html>

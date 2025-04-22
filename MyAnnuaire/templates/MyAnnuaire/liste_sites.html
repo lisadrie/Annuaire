@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Sites</title>
+</head>
+<body>
+    <h1>Liste des Sites</h1>
+    <link rel="stylesheet" type="text/css" href="{% static 'MyAnnuaire/css/style.css' %}">
+    <ul>
+        {% for site in sites %}
+            <li>
+                <a href="{% url 'salaries_par_site' site.ville %}">{{ site.ville }}</a>
+                {% if site.description %}
+                    <p class="description">{{ site.description }}</p>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Aucun site trouvé.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'liste_salaries' %}">Retour à la liste des salariés</a></p>
+</body>
+</html>
