@@ -3,27 +3,124 @@
 <html>
 <head>
     <title>{{ titre|default:"Liste des Salariés" }}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'MyAnnuaire/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'MyAnnuaire/css/style.css' %}">
 </head>
 <body>
-    <h1>{{ titre|default:"Liste des Salariés" }}</h1>
-    <ul>
+    <h1 class="Title-Site">{{ titre|default:"Liste des Salariés" }}</h1>
+    <h2>Filtrer / Rechercher</h2>
+
+    <!-- UN SEUL FORMULAIRE -->
+    <form method="get" action="" style="display: flex; flex-direction: column;" id="filter-form">
+        <div class="filtre-row">
+            <div class="search-filter">
+                <label for="name-filter">Nom ou prénom :</label>
+                <input
+                  type="text"
+                  name="q"
+                  id="q"
+                  placeholder="Entrez un nom…"
+                  value="{{ request.GET.q }}"
+                >
+            </div>
+    
+            <div class="search-filter">
+                <label for="site-filter">Site :</label>
+                <select name="site" id="site-filter">
+                    <option value="">Tous les sites</option>
+                    {% for site in sites %}
+                        <option
+                          value="{{ site.ville }}"
+                          {% if request.GET.site == site.ville %}selected{% endif %}
+                        >
+                          {{ site.ville }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="search-filter">
+                <label for="service-filter">Service :</label>
+                <select name="service" id="service-filter">
+                    <option value="">Tous les services</option>
+                    {% for service in services %}
+                        <option
+                          value="{{ service.nom|urlencode }}"
+                          {% if request.GET.service|urlencode == service.nom|urlencode %}selected{% endif %}
+                        >
+                          {{ service.nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <button type="submit">Appliquer</button>
+            {% if request.GET.q or request.GET.site or request.GET.service %}
+                <a href="{% url 'liste_salaries' %}" class="clear-filters">
+                  Réinitialiser
+                </a>
+            {% endif %}
+        </div>
+    </form>
+
+    <ul class="user-list">
         {% for salarie in salaries %}
-            <li><a href="{% url 'detail_salarie' salarie.id %}">{{ salarie.prenom }} {{ salarie.nom }}</a></li>
+          <li class="user-card">
+            <!-- // header cliquable -->
+            <div class="user-header">
+              <span class="user-name">
+                {{ salarie.prenom }} {{ salarie.nom }}
+              </span>
+              <span class="arrow">&#9654;</span>  {# ▶ caractère flèche #}
+            </div>
+            <!-- // détails cachés par défaut -->
+            <div class="user-details">
+                <p><strong>Email :</strong> {{ salarie.email }}</p>
+                {% if salarie.telephone_fixe %}
+                    <p><strong>Téléphone fixe :</strong> {{ salarie.telephone_fixe }}</p>
+                {% endif %}
+                <p><strong>Téléphone portable :</strong> {{ salarie.telephone_portable }}</p>
+                <p><strong>Site :</strong> {{ salarie.site.ville }}</p>
+                <p><strong>Service :</strong> {{ salarie.service.nom }}</p>
+            </div>
+          </li>
         {% empty %}
-            <li>Aucun salarié trouvé.</li>
+          <li class="user-card empty">Aucun salarié trouvé.</li>
         {% endfor %}
-    </ul>
-    <p><a href="{% url 'recherche_par_nom' %}">Rechercher par nom</a></p>
-    <p>Rechercher par site :
-        {% for site in sites %}
-            <a href="{% url 'salaries_par_site' site.ville %}">{{ site.ville }}</a>
-        {% endfor %}
-    </p>
-    <p>Rechercher par service :
-        {% for service in services %}
-            <a href="{% url 'salaries_par_service' service.nom %}">{{ service.nom }}</a>
-        {% endfor %}
-    </p>
+      </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if salaries.has_previous %}
+                <a href="?page=1">&laquo; Première</a>
+                <a href="?page={{ salaries.previous_page_number }}">Précédente</a>
+            {% endif %}
+            <span class="current">
+                Page {{ salaries.number }} sur {{ salaries.paginator.num_pages }}.
+            </span>
+            {% if salaries.has_next %}
+                <a href="?page={{ salaries.next_page_number }}">Suivante</a>
+                <a href="?page={{ salaries.paginator.num_pages }}">Dernière &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+          // 1) Toggle de l'accordéon
+          document.querySelectorAll('.user-card .user-header').forEach(header => {
+            header.addEventListener('click', () => {
+              header.closest('.user-card').classList.toggle('open');
+            });
+          });
+  
+          // 2) Raccourci Ctrl+Alt+A vers /admin/
+          document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.altKey && event.key === 'a') {
+              window.location.href = '/admin/';
+            }
+          });
+        });
+      </script>
 </body>
 </html>

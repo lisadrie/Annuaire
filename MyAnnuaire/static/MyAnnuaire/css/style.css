@@ -3,8 +3,21 @@
 body {
     font-family: 'Arial', sans-serif;
     margin: 20px;
+    padding-top: 60px;
     background-color: #f4f4f4;
     color: #333;
+}
+
+.Title-Site {
+    position: fixed;        /* Fixe en haut de la page */
+    top: 0;                 /* À 0px du haut */
+    left: 0;                /* À 0px du bord gauche */
+    width: 100%;            /* Sur toute la largeur */
+    margin: 0;              /* Plus aucune marge par défaut */
+    padding: 15px 20px;     /* Ajuste l’espace intérieur */
+    background-color: #fff; /* Fond blanc pour recouvrir le contenu dessous */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    z-index: 1000;          /* Au-dessus de tout le reste */
 }
 
 h1, h2 {
@@ -72,7 +85,8 @@ label {
 }
 
 input[type="text"],
-input[type="email"] {
+input[type="email"],
+select {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -105,3 +119,111 @@ button[type="submit"]:hover {
 .back-link:hover {
     text-decoration: underline;
 }
+
+.clear-filters {
+    background-color: red;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    text-decoration: none;
+}
+
+.clear-filters:hover {
+    background-color: rgb(210, 75, 75);
+}
+/* static/MyAnnuaire/css/style.css */
+
+/* ... autres styles ... */
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.step-links {
+    display: inline-block;
+}
+
+.step-links a,
+.step-links span.current {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.step-links a:hover {
+    background-color: #eee;
+}
+
+.step-links span.current {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.filtre-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.search-filter {
+    margin: 0 10px 0 0;
+}
+
+/* 1. Structure du header */
+.user-card .user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 16px;
+  }
+  
+  /* 2. Zone de détails cachée */
+  .user-card .user-details {
+    display: none;
+    padding: 0 16px 16px;
+    background-color: #fafafa;
+    border-top: 1px solid #eee;
+    font-size: 0.95em;
+    color: #444;
+  }
+  
+  /* 3. Quand ouvert, on affiche les détails */
+  .user-card.open .user-details {
+    display: block;
+  }
+  
+  /* 4. Flèche à droite */
+  .arrow {
+    transition: transform 0.3s ease;
+    font-size: 1.2em;
+    color: #888;
+  }
+  
+  /* 5. Flèche tournée quand ouvert */
+  .user-card.open .arrow {
+    transform: rotate(90deg);
+    color: #007bff;
+  }
+  
+  /* 7. Style de la carte */
+  .user-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+  .user-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  

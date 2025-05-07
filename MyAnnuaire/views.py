@@ -2,11 +2,51 @@ from django.shortcuts import render, get_object_or_404
 from .models import Salarie, Site, Service
 from django.db.models import Q
 
+from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .models import Salarie, Site, Service
+
+from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .models import Salarie, Site, Service
+from django.db.models import Q
+
 def liste_salaries(request):
-    salaries = Salarie.objects.all()
+    salaries_list = Salarie.objects.all()
+    salaries_list = Salarie.objects.all()
+
+    q_filter = request.GET.get('q','').strip()
+    site_filter = request.GET.get('site')
+    service_filter = request.GET.get('service')
+
+    if q_filter:
+        salaries_list = salaries_list.filter(
+            Q(nom__icontains=q_filter) | Q(prenom__icontains=q_filter)
+        )
+
+    if site_filter:
+        salaries_list = salaries_list.filter(site__ville=site_filter)
+
+    if service_filter:
+        salaries_list = salaries_list.filter(service__nom=service_filter)
+
+    paginator = Paginator(salaries_list, 10)
+    page = request.GET.get('page')
+    try:
+        salaries = paginator.page(page)
+    except PageNotAnInteger:
+        salaries = paginator.page(1)
+    except EmptyPage:
+        salaries = paginator.page(paginator.num_pages)
+
     sites = Site.objects.all()
     services = Service.objects.all()
-    return render(request, 'MyAnnuaire/liste_salaries.html', {'salaries': salaries, 'sites': sites, 'services': services})
+
+    return render(request, 'MyAnnuaire/liste_salaries.html', {
+        'salaries': salaries,
+        'sites': sites,
+        'services': services,
+    })
 
 def detail_salarie(request, pk):
     salarie = get_object_or_404(Salarie, pk=pk)

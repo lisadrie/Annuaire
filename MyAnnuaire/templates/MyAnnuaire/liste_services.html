@@ -17,4 +17,11 @@
     </ul>
     <p><a href="{% url 'liste_salaries' %}">Retour à la liste des salariés</a></p>
 </body>
+<script>
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.altKey && event.key === 'a') {
+            window.location.href = '/admin/';
+        }
+    });
+</script>
 </html>
